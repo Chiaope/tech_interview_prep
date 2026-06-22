@@ -1,4 +1,69 @@
 # ASync IO
+# Concurrency in Python: Pros and Cons
+
+A breakdown of the three main concurrency models in Python: **Asyncio**, **Multithreading**, and **Multiprocessing**.
+
+---
+
+## 1. Asyncio (Asynchronous I/O)
+Runs on a single thread in a single process using cooperative multitasking via an event loop. 
+**Best for:** High-volume I/O-bound tasks (e.g., thousands of simultaneous network connections, chat servers).
+
+### ✅ Pros
+* **Extremely Lightweight:** Can handle tens of thousands of simultaneous async tasks on a single thread without crashing the system.
+* **No Lock Contention:** Everything runs on one thread, eliminating complex locks, mutexes, and race conditions associated with shared memory.
+* **Massive Scalability:** The absolute best option for managing a huge number of concurrent network requests.
+
+### ❌ Cons
+* **Viral Nature:** Usually requires your entire codebase (and dependencies) to be async. You must use async-compatible libraries (e.g., `aiohttp` instead of `requests`). Once decided to use `async` we have to use `async` for everything else.
+* **Blocks on CPU Tasks:** A single heavy CPU calculation will block the entire event loop, freezing all other tasks.
+* **Steeper Learning Curve:** Requires a paradigm shift to understand event loops, futures, and callbacks.
+* **File I/O Task:** `asyncio` is good for network I/O task but bad for file I/O task.
+
+---
+
+## 2. Multithreading
+Uses the operating system to spawn multiple threads within a single Python process, sharing the same memory space.
+**Best for:** Standard I/O-bound tasks using synchronous code (e.g., downloading dozens of files, simple web scraping).
+
+### ✅ Pros
+* **Shared Memory:** Because threads live in the same process, sharing variables and state between them is effortless.
+* **File I/O Task:** It is very fast when doing file related I/O tasks.
+* **Familiarity:** Works well with existing synchronous, blocking code without requiring an architectural overhaul. Able to work with any regular python code without the need to search for async compatible packages.
+* **Bypasses GIL for I/O:** When a thread waits for I/O (like a network response), it releases the Global Interpreter Lock (GIL), allowing other threads to execute.
+
+### ❌ Cons
+* **The GIL Limitation:** Provides **zero performance benefit for CPU-bound tasks**. Only one thread can execute Python bytecode at a time.
+* **Race Conditions:** Shared memory means simultaneous modifications can cause disastrous, hard-to-debug race conditions. Actively managing "locks" is required.
+* **Context Switching Overhead:** The OS spends resources switching between threads. Spawning too many threads will severely degrade performance.
+
+---
+
+## 3. Multiprocessing
+Spawns entirely new, distinct OS processes, each with its own Python interpreter, memory space, and GIL.
+**Best for:** CPU-bound tasks (e.g., data science, image processing, complex math, machine learning).
+
+### ✅ Pros
+* **True Parallelism:** Completely sidesteps the GIL. Allows you to utilize all CPU cores simultaneously at full speed.
+* **Memory Isolation:** Safe from race conditions and locking headaches because memory isn't shared. If one process crashes, it doesn't take down the others.
+
+### ❌ Cons
+* **High Overhead:** Creating processes takes significant time and memory. Spawning hundreds of processes is incredibly heavy on the OS.
+* **Complex IPC (Inter-Process Communication):** Because memory isn't shared, passing data between processes requires Queues, Pipes, or shared memory managers, introducing serialization/deserialization latency.
+
+---
+
+## Summary Table
+
+| Feature | Asyncio | Multithreading | Multiprocessing |
+| :--- | :--- | :--- | :--- |
+| **Concurrency Model** | Cooperative (Event Loop) | Preemptive (OS managed) | Preemptive (OS managed) |
+| **Best Used For** | High-volume I/O-bound | Low/Medium-volume I/O-bound | CPU-bound |
+| **Bypasses GIL?** | N/A (Single Thread) | Only for I/O | **Yes (True Parallelism)** |
+| **Memory Overhead** | Very Low | Medium | Very High |
+| **Shared Memory** | Yes (Trivially) | Yes (Requires Locks) | No (Requires IPC) |
+
+## How to use asyncio
 
 To create an asynchronous function, we need to add the keyword `async` in front of `def`.
 
@@ -169,7 +234,7 @@ if __name__ == "__main__":
     print(f"{__file__} executed in {elapsed:0.2f} seconds.")
 ```
 
-# Queue
+## Queue
 We can create Producers and Consumers design pattern by using asynchronous queue.
 ```python
 import asyncio
@@ -227,7 +292,7 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
-# Generator
+## Generator
 The difference between asynchronous generator and synchronous generator is that for async generator, other async processes can run in between the iteration process while, synchronouse generator does not allow that.
 
 So the main benefit of using asynchronouse generator is when you know that the generator will have a lot of waiting required, for example, making http requests in each of the loop.
@@ -259,7 +324,7 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
-# Exception Handling
+## Exception Handling
 For `TaskGroup`, if there is a single function that run into exception, the entire task group will fail. 
 
 So there is 2 ways to mitigate this issue.
