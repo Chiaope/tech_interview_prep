@@ -1,4 +1,16 @@
 # Notes
+## Principle of OOP
+
+### The 4 Core OOP Principles
+
+**Encapsulation:** Wrapping data (variables) and methods (functions) into a single unit (class). It restricts direct access to some of an object's components, protecting the data from accidental modification.
+
+**Abstraction:** Hiding complex implementation details and exposing only the essential features of an object. This allows users to interact with objects using simple methods without worrying about the underlying code.
+
+**Inheritance:** The mechanism where one class acquires the properties and behaviors of another class. It establishes a hierarchy and promotes code reusability by letting you create new classes based on existing ones.
+
+**Polymorphism:** The ability of different objects to respond to the same method call in their own unique way. This is usually achieved through method overriding or method overloading.
+
 
 ## super()
 ```
