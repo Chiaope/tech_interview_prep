@@ -406,3 +406,83 @@ async def main():
 if __name__ == '__main__':
     asyncio.run(main())
 ```
+
+## Semaphore
+Semaphore is the setting for the number of concurrent task that can be running at once. It is mainly to control the resource usage. 
+
+eg,. control the number of API call to external server and prevent being blocked.
+
+```python
+import asyncio 
+import random
+
+async def demo_semaphore(semaphore, worker_id):
+    print(f"{worker_id} is waiting to start")
+    async with semaphore:
+        print(f"{worker_id} started working")
+        await asyncio.sleep(random.uniform(1,3))
+        print(f"{worker_id} finished working")
+    return
+
+async def main():
+    # allow 1 concurrent task to run only
+    semaphore_1 = asyncio.Semaphore(1)
+    # allow 3 concurrent task to run only
+    semaphore_3 = asyncio.Semaphore(3)
+
+    async with asyncio.TaskGroup() as tg:
+        for i in range(10):
+            tg.create_task(demo_semaphore(semaphore_1, i))
+            tg.create_task(demo_semaphore(semaphore_3, i+10))
+    return
+
+if __name__ == '__main__':
+    asyncio.run(main())
+```
+
+## BoundedSemaphore
+Main difference between bounded semaphore and normal semaphore is that in normal semaphore, you can `release()` more amount than the set amount of slots, whereas bounded semaphore will throw an error if you are releasing more than the set amount of idle slots.
+
+**Important note:** Even though bounded semaphore does not allow more than X amount of idle slots, if there are any coroutine is that waiting to run, the moment the semaphore release a slot, the coroutine will immediately take up the slot, reducing the idle slots available by 1. So this means that even though we set our slots to eg,. `2`, if there are `1000` coroutine waiting, the semaphore can release `1002` times and **no exception will be thrown**, all `1000` coroutine will be running together. 
+
+We need to be very specific on the number of slots we are allowed to release, and how we release those slots, if not it will defeat the purpose of bounded semaphore.
+
+**FYI:** we can also use context manager for bounded semaphore, `async with asyncio.BoundedSemaphore(5)`
+
+```python
+import asyncio
+import random
+
+async def acquire_semaphore(semaphore, worker_id):
+    print(f"{worker_id} is waiting to acquire semaphore")
+    await semaphore.acquire()
+    print(f"{worker_id} managed to get semaphore and started working")
+    await asyncio.sleep(random.uniform(1,3))
+    print(f"{worker_id} finished working")
+    return
+
+async def release_semaphore(semaphore, slots):
+    while True:
+        await asyncio.sleep(1)
+        try:
+            for _ in range(slots):
+                print("Releasing more semaphore slots")
+                semaphore.release()
+        except ValueError:
+            print("Releasing too many")
+            pass
+
+async def main():
+    value_limit = 2
+    # BoundedSemaphore does not allow more than X idle slots available.
+    semaphore = asyncio.BoundedSemaphore(value_limit)
+    asyncio.create_task(release_semaphore(semaphore, value_limit))
+
+    async with asyncio.TaskGroup() as tg:
+        for i in range(5):
+            tg.create_task(acquire_semaphore(semaphore, i))
+
+if __name__ == '__main__':
+    asyncio.run(main())
+
+```
