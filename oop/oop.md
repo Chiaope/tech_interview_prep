@@ -18,6 +18,8 @@ super() calls the parent class
 ```
 
 ## `super().__new__(cls, name, bases, dct)`
+This is used with `def __new__(cls, *args, **kwargs)`. `__new__` will be ran whenever the class is created, eg. `class NewClass(ParentClass)`. It is used to check or create stuff before the actual class is created.
+
 ```
 cls: refers to the current class
 name: refers to the current class name
