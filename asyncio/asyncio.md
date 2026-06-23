@@ -410,7 +410,7 @@ if __name__ == '__main__':
 ## Semaphore
 Semaphore is the setting for the number of concurrent task that can be running at once. It is mainly to control the resource usage. 
 
-eg,. control the number of API call to external server and prevent being blocked.
+eg. control the number of API call to external server and prevent being blocked.
 
 ```python
 import asyncio 
@@ -443,7 +443,7 @@ if __name__ == '__main__':
 ## BoundedSemaphore
 Main difference between bounded semaphore and normal semaphore is that in normal semaphore, you can `release()` more amount than the set amount of slots, whereas bounded semaphore will throw an error if you are releasing more than the set amount of idle slots.
 
-**Important note:** Even though bounded semaphore does not allow more than X amount of idle slots, if there are any coroutine is that waiting to run, the moment the semaphore release a slot, the coroutine will immediately take up the slot, reducing the idle slots available by 1. So this means that even though we set our slots to eg,. `2`, if there are `1000` coroutine waiting, the semaphore can release `1002` times and **no exception will be thrown**, all `1000` coroutine will be running together. 
+**Important note:** Even though bounded semaphore does not allow more than X amount of idle slots, if there are any coroutine is that waiting to run, the moment the semaphore release a slot, the coroutine will immediately take up the slot, reducing the idle slots available by 1. So this means that even though we set our slots to eg. `2`, if there are `1000` coroutine waiting, the semaphore can release `1002` times and **no exception will be thrown**, all `1000` coroutine will be running together. 
 
 We need to be very specific on the number of slots we are allowed to release, and how we release those slots, if not it will defeat the purpose of bounded semaphore.
 
