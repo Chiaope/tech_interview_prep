@@ -20,9 +20,9 @@ class Human(Mammal):
     def speak(self):
         print("Human speaking")
 
-
-human = Human("Human Name")
-print(human.species)  # this will give "Human"
-print(human.blood_color)  # this will give "red"
-print(human.name)  # this will give "Human Name"
-human.speak()  # this will give "Human speaking"
+if __name__ == '__main__':
+    human = Human("Human Name")
+    print(human.species)  # this will give "Human"
+    print(human.blood_color)  # this will give "red"
+    print(human.name)  # this will give "Human Name"
+    human.speak()  # this will give "Human speaking"
