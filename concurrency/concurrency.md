@@ -109,3 +109,30 @@ if __name__ == "__main__":
 ```
 
 ## Speed up CPU bound programs
+Some task require a lot of computational power, for example **hyperparameter tuning** or **machine learning**. Using `mulltithreading` or `asyncio` will not speed things up since there are no waiting for I/O operations, everything depends on the computational speed.
+
+In order to help speed up the computational time, we can leverage `multiprocessing`. This allows the computational to be running in **true parallelism**. Multiple processes will be running simultatneously and computing the results in parallel.
+
+**Important Note:** **ALWAYS USE** `if __name__ == "__main__"` since multiprocessing works by spinning up new process and importing the module. If this block is not included, it will essentially spin up infinite process recursively.
+
+```python
+import time
+from concurrent.futures import ProcessPoolExecutor
+
+
+def fib(n):
+    return n if n < 2 else fib(n - 1) + fib(n - 2)
+
+
+def main():
+    start_time = time.perf_counter()
+    with ProcessPoolExecutor(max_workers=4) as ppe:
+        fib_list = [35] * 20
+        ppe.map(fib, fib_list)
+    end_time = time.perf_counter()
+    print(f"Time taken: {end_time - start_time:.3f} seconds")
+
+
+if __name__ == "__main__":
+    main()
+```
