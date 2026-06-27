@@ -57,15 +57,15 @@ Each core have their own L1/L2 cache and if the OS decided to switch the process
 5. Lock-free architecture (Ring Buffers) - Died
 6. websockets - Done
 7. Dataclass - Done
-8. Factory design pattern
-9. Observer Pattern
-10. collections.deque
+8. Factory design pattern - Done
+9. Observer Pattern - Done
+10. collections.deque - Done
 11. SOLID Design Principles
 12. Finite State Machines
 13. Designing heartbeats
 14. OLAP vs OLTP
 15. Message brokers
 16. Redis cache
-17. Sliding Window and Two-Pointer Algorithms
+17. Sliding Window and Two-Pointer Algorithms - Done
 18. heapq
 19. Idempotency and Fault Tolerance in Event Streams (Kubernetes)

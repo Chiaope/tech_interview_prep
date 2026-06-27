@@ -1,3 +1,9 @@
+"""
+Dataclass design pattern is important because it is used mainly to store and validate data.
+It is a simple way to create classes that are primarily used to hold data without having to write boilerplate code for methods like __init__, __repr__, and __eq__.
+"""
+
+
 from pydantic import BaseModel, Field, field_validator
 
 class MyDataClass(BaseModel):
