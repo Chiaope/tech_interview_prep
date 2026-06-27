@@ -136,3 +136,6 @@ def main():
 if __name__ == "__main__":
     main()
 ```
+
+## Lock-free architecture
+Using lock-free architecture, locks are no longer needed and there will not be any blocking task that might prevent threads/process from running
