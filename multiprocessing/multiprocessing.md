@@ -65,7 +65,7 @@ Each core have their own L1/L2 cache and if the OS decided to switch the process
 13. Designing heartbeats
 14. OLAP vs OLTP
 15. Message brokers
-16. Redis cache
+16. Redis cache - Done
 17. Sliding Window and Two-Pointer Algorithms - Done
-18. heapq
+18. heapq - Done
 19. Idempotency and Fault Tolerance in Event Streams (Kubernetes)
