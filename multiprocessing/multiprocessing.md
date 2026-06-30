@@ -63,7 +63,7 @@ Each core have their own L1/L2 cache and if the OS decided to switch the process
 11. **SOLID Design Principles**
 12. **Finite State Machines** - Done
 13. **Designing heartbeats** - Derp
-14. OLAP vs OLTP
+14. **OLAP vs OLTP** - Done
 15. Message brokers
 16. **Redis cache** - Done
 17. **Sliding Window and Two-Pointer Algorithms** - Done
