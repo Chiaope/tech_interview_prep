@@ -1,0 +1,4 @@
+# API Gateway
+The main purpose of an API gateway is to control how client communicates to the microservices. It is also to reduce the repeatition of boiler plate function like auth, rate limiting, validation, etc, allowing the microservice to handle only the business logic instead. There can also be response transformation features available, eg. transforming RPC response to Restful API.
+
+API gateway is an easy way to manage any updates to the routing rules, eg. when there are new features available, it can easily control and change the route to the new API without changing how the client get data from the microservice.

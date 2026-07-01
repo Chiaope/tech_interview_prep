@@ -44,28 +44,3 @@ Dam complex so dont get too deep into it lol.
 ## CPU Affinity/Pinning
 CPU affinity/pinning means allowing a selected set of CPU cores to process data.
 Each core have their own L1/L2 cache and if the OS decided to switch the process to another core, the cache will no longer be hot and then data will have to be reloaded again.
-
-
-
-
-
-## What to know
-1. **Polars/Pandas multiprocessing** - Done
-2. **forkserver** - Died
-3. **shared_memory** - Died
-4. **CPU Affinity (Pinning)** - Died
-5. **Lock-free architecture (Ring Buffers)** - Died
-6. **websockets** - Done
-7. **Dataclass** - Done
-8. **Factory design pattern** - Done
-9. **Observer Pattern** - Done
-10. **collections.deque** - Done
-11. **SOLID Design Principles**
-12. **Finite State Machines** - Done
-13. **Designing heartbeats** - Derp
-14. **OLAP vs OLTP** - Done
-15. Message brokers
-16. **Redis cache** - Done
-17. **Sliding Window and Two-Pointer Algorithms** - Done
-18. **heapq** - Done
-19. Idempotency and Fault Tolerance in Event Streams (Kubernetes)
