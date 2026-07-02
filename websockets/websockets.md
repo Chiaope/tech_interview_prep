@@ -1,6 +1,8 @@
 # Websockets
 When dealing with real time data stream, we have to use websockets. Websocket only allow strings not JSON not dictionary not array.
 
+STOMP protocol are often used for messaging queues.
+
 ## Architecture
 - There should be a backoff in place, most of the time it should be an exponential backoff to retry connection
 - there should be ping and pong to maintain the connection
