@@ -3,8 +3,8 @@ Dataclass design pattern is important because it is used mainly to store and val
 It is a simple way to create classes that are primarily used to hold data without having to write boilerplate code for methods like __init__, __repr__, and __eq__.
 """
 
+from pydantic import BaseModel, Field, field_validator, computed_field
 
-from pydantic import BaseModel, Field, field_validator
 
 class MyDataClass(BaseModel):
     my_field_1: int
@@ -14,13 +14,17 @@ class MyDataClass(BaseModel):
     my_optional_field: str | None = None
     my_validate_field_1: list[int]
     my_validate_field_2: list[int]
-    
+
     @field_validator("my_validate_field_1", "my_validate_field_2")
     @classmethod
     def validate_int_greater_than_zero(cls, v):
         if not all(isinstance(i, int) and i > 0 for i in v):
             raise ValueError("All elements must be integers greater than zero")
         return v
+
+    @computed_field
+    def my_computed_field(self) -> list[int]:
+        return self.my_validate_field_1 + self.my_validate_field_2
 
 
 def check_data_class(data, data_class):
@@ -31,17 +35,20 @@ def check_data_class(data, data_class):
         print(f"Data validation error: {e}")
         return False
 
+
 def main():
     check_data = {
-        "my_field_1": "42", 
-        "my_field_2": "Hello", 
+        "my_field_1": "42",
+        "my_field_2": "Hello",
         "my_alias": "World",
         "my_validate_field_1": [1, 2, 3],
-        "my_validate_field_2": [4, 5, "abc"]
+        "my_validate_field_2": [4, 5, 3, 4],
     }
     if check_data_class(check_data, MyDataClass):
         data = MyDataClass(**check_data)
+        print(f"My computed field: {data.my_computed_field}")
         print(data.model_dump(by_alias=True))
 
+
 if __name__ == "__main__":
-    main()
+    main()  # Output: {'my_field_1': 42, 'my_field_2': 'Hello', 'my_alias': 'World', 'my_default_field': 'my_default_value', 'my_optional_field': None, 'my_validate_field_1': [1, 2, 3], 'my_validate_field_2': [4, 5, 3, 4], 'my_computed_field': [1, 2, 3, 4, 5, 3, 4]}
