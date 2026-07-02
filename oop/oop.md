@@ -222,3 +222,62 @@ if __name__ == "__main__":
     child._protected = "Child New Protected"
     print(child._protected)  # output: Child New Protected
 ```
+
+## Abstraction
+Abstraction is a design-level concept. It hides complexity by providing a simplified interface (e.g., an abstract class or an API).
+
+At its core, abstraction is the process of hiding the complex, underlying implementation details of a system and exposing only the essential interface necessary to interact with it.
+
+Instead of forcing the user (or another part of your codebase) to understand how something works, abstraction lets them focus entirely on what it does. It establishes a contract.
+
+If you think about infrastructure or data pipelines, abstraction is the reason you can swap out a backend system without breaking the application logic that depends on it.
+
+```python
+from abc import ABC, abstractmethod
+
+
+# This is our Abstraction (the contract)
+class DataReader(ABC):
+    @abstractmethod
+    def connect(self):
+        """Establish connection to the data source."""
+        pass
+
+    @abstractmethod
+    def fetch_data(self, query: str):
+        """Fetch and return the data."""
+        pass
+
+
+# Implementation 1: Local Database
+class PostgresReader(DataReader):
+    def connect(self):
+        print("Connecting to Postgres via psycopg2...")
+
+    def fetch_data(self, query: str):
+        print(f"Executing '{query}' on Postgres...")
+        return {"data": "postgres_results"}
+
+
+# Implementation 2: Cloud Storage
+class S3ParquetReader(DataReader):
+    def connect(self):
+        print("Authenticating with AWS S3...")
+
+    def fetch_data(self, query: str):
+        print(f"Filtering Parquet files in S3 for '{query}'...")
+        return {"data": "s3_results"}
+
+
+def run_analytics(reader: DataReader):
+    # The business logic relies on the abstraction, not the concrete class.
+    reader.connect()
+    data = reader.fetch_data("SELECT * FROM trades")
+    print("Processing:", data)
+
+
+if __name__ == "__main__":
+    # You can swap the implementation without changing the analytics logic
+    db_reader = PostgresReader()
+    run_analytics(db_reader)
+```
